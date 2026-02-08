@@ -1,3 +1,12 @@
+// loader.js の先頭
+var gameConfig = {
+  _version: { commit_short: "" },
+  custom_js: null,
+  assets_baseurl: "",
+  songs_baseurl: "",
+  accounts: false
+};
+
 class Loader{
 	constructor(callback){
 		this.callback = callback
@@ -13,15 +22,10 @@ class Loader{
 			this.screen.innerHTML = page
 		}))
 		
-		promises.push(this.ajax("/api/config").then(conf => {
-			gameConfig = {
-	_version: { commit_short: "" },
-	custom_js: null,
-	accounts: false,
-	assets_baseurl: "",
-	songs_baseurl: ""
-};
-		}))
+		// 先頭でグローバルで定義
+
+
+promises.push(Promise.resolve());
 		
 		Promise.all(promises).then(this.run.bind(this))
 	}
@@ -106,7 +110,7 @@ class Loader{
 			}), url)
 		})
 		
-		this.addPromise(this.ajax("/api/categories").then(cats => {
+		this.addPromise(this.ajax("categories.json").then(cats => {
 			assets.categories = JSON.parse(cats)
 			assets.categories.forEach(cat => {
 				if(cat.song_skin){
@@ -126,7 +130,7 @@ class Loader{
 					infoFill: "#656565"
 				}
 			})
-		}), "/api/categories")
+		}), "categories.json")
 		
 		var url = gameConfig.assets_baseurl + "img/vectors.json" + this.queryString
 		this.addPromise(this.ajax(url).then(response => {
@@ -135,7 +139,7 @@ class Loader{
 		
 		this.afterJSCount =
 			[
-				"/api/songs",
+				"songs.json",
 				"blurPerformance",
 				"categories"
 			].length +
@@ -150,7 +154,7 @@ class Loader{
 				return
 			}
 			
-			this.addPromise(this.ajax("/api/songs").then(songs => {
+			this.addPromise(this.ajax("songs.json").then(songs => {
 				songs = JSON.parse(songs)
 				songs.forEach(song => {
 					var directory = gameConfig.songs_baseurl + song.id + "/"
@@ -175,7 +179,7 @@ class Loader{
 				})
 				assets.songsDefault = songs
 				assets.songs = assets.songsDefault
-			}), "/api/songs")
+			}), "songs.json")
 			
 			var categoryPromises = []
 			assets.categories //load category backgrounds to DOM
