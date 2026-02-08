@@ -9,7 +9,7 @@ class Loader{
 		
 		var promises = []
 		
-		promises.push(this.ajax("/src/views/loader.html").then(page => {
+		promises.push(this.ajax("src/views/loader.html").then(page => {
 			this.screen.innerHTML = page
 		}))
 		
@@ -41,7 +41,7 @@ class Loader{
 			assets.js.push("lib/oggmented-wasm.js")
 		}
 		assets.js.forEach(name => {
-			this.addPromise(this.loadScript("src/js/" + name), "/src/js/" + name)
+			this.addPromise(this.loadScript("src/js/" + name), "src/js/" + name)
 		})
 		
 		var pageVersion = versionLink.href
@@ -100,7 +100,7 @@ class Loader{
 		
 		assets.views.forEach(name => {
 			var id = this.getFilename(name)
-			var url = "/src/views/" + name + this.queryString
+			var url = "src/views/" + name + this.queryString
 			this.addPromise(this.ajax(url).then(page => {
 				assets.pages[id] = page
 			}), url)
