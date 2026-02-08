@@ -14,7 +14,13 @@ class Loader{
 		}))
 		
 		promises.push(this.ajax("/api/config").then(conf => {
-			gameConfig = JSON.parse(conf)
+			gameConfig = {
+	_version: { commit_short: "" },
+	custom_js: null,
+	accounts: false,
+	assets_baseurl: "",
+	songs_baseurl: ""
+};
 		}))
 		
 		Promise.all(promises).then(this.run.bind(this))
@@ -35,7 +41,7 @@ class Loader{
 			assets.js.push("lib/oggmented-wasm.js")
 		}
 		assets.js.forEach(name => {
-			this.addPromise(this.loadScript("/src/js/" + name), "/src/js/" + name)
+			this.addPromise(this.loadScript("src/js/" + name), "/src/js/" + name)
 		})
 		
 		var pageVersion = versionLink.href
@@ -55,7 +61,7 @@ class Loader{
 			assets.css.forEach(name => {
 				var stylesheet = document.createElement("link")
 				stylesheet.rel = "stylesheet"
-				stylesheet.href = "/src/css/" + name + this.queryString
+				stylesheet.href = "src/css/" + name + this.queryString
 				document.head.appendChild(stylesheet)
 			})
 			assets.assetsCss.forEach(name => {
